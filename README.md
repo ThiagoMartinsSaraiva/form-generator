@@ -1,5 +1,9 @@
 # form-generator
 
+# live version
+
+## https://thiago-saraiva-form-generator.netlify.app/
+
 ## para rodar o projeto você deve ter o node instalado, preferencialmente na versão 20.10
 
 ## fazer o clone do projeto, 
