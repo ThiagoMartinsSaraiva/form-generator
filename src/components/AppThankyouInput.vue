@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <!-- <h1>Input Thankyou Component</h1> -->
+  <div class="thankyou-wrapper">
+     <h1>Input thankyou Component</h1>
   </div>
 </template>
 <script>
@@ -9,9 +9,12 @@ export default {
   data() {
     return {};
   },
-  mounted() {
-    console.log("componente foi montado");
-  },
 };
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.thankyou-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

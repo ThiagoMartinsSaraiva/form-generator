@@ -1,14 +1,20 @@
 <template>
-  <div class="input-container">
-    <div class="input-container-field">
-      <div class="input-container-field-label">
-        <label class="input-container-field-label-main">{{ formField.value }}</label>
-        <label class="input-container-field-label-secondary" v-if="formField.description[0]">{{ formField.description[0] }}</label>
+  <div class="full-wrapper">
+    <div class="input-container">
+      <div class="input-container-field">
+        <div class="input-container-field-label">
+          <label class="input-container-field-label-main">{{ formField.value }}</label>
+          <label class="input-container-field-label-secondary" v-if="formField.description[0]">{{ formField.description[0] }}</label>
+        </div>
+        <component :is="inputToRender" :field="formField" v-model="data" />
+        <div class="button-container">
+          <button :class="['button', { 'button--loading': isLoading }]" v-html="buttonText" @click="nextQuestion" :disabled="isLoading"></button>
+        </div>
       </div>
-      <component :is="inputToRender" :field="formField" />
-      <div class="input-container-button-container">
-        <button class="button-container.button" v-html="buttonText"></button>
-      </div>
+    </div>
+    <div class="form-container-button-container">
+      <button @click="previousQuestion"><i class="fa-solid fa-arrow-up"></i></button>
+      <button @click="nextQuestion"><i class="fa-solid fa-arrow-down"></i></button>
     </div>
   </div>
 </template>
@@ -16,6 +22,8 @@
 
 export default {
   name: "AppInput",
+  components: {
+  },
   props: {
     formField: { type: Object, default: () => ({}) }
   },
@@ -25,24 +33,56 @@ export default {
         'text': () => import ('./AppTextInput.vue'),
         'email': () => import ('./AppEmailInput.vue'),
         'radio': () => import ('./AppRadioInput.vue'),
-        'thankyou': () => import ('./AppThankyouInput.vue'),
-      }
+      },
+      data: '',
     };
   },
+  methods: {
+    async previousQuestion() {
+      await this.$store.dispatch('FormStore/previousQuestion', { field: this.formField.slug, value: this.data })
+    },
+    async nextQuestion() {
+      await this.$store.dispatch('FormStore/submitItem', { field: this.formField.slug, value: this.data })
+    },
+  },
+  watch: {
+    formField: {
+      handler(value) {
+        const formData = this.$store.getters["FormStore/getFormData"]
+        this.data = formData[value.slug]
+      },
+      immediate: true,
+    }
+  },
   computed: {
+    isLastInput() {
+      return this.$store.getters['FormStore/isLastField']
+    },
     inputToRender() {
       return this.mappedInput[this.formField.type]
     },
     buttonText() {
-      // 'Responder'
-      return `<i class="fa-solid fa-check"></i>&nbsp; Enviar respostas`
+      return  this.isLastInput ? `<i class="fa-solid fa-check"></i>&nbsp; Enviar respostas` : 'Responder'
     },
-  }
+    isLoading() {
+      return this.$store.getters['FormStore/isLoading']
+    },
+    styles() {
+      const state = this.$store.getters['FormStore/getState']
+      return state.style
+    }
+  },
 };
 </script>
 <style lang="scss">
+.full-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
 .input-container {
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
 
@@ -59,24 +99,30 @@ export default {
       gap: 15px;
       &-main {
         font-size: 24px;
+        color: v-bind('styles.textColor');
       }
       &-secondary {
         font-size: 16px;
-        color: #263238;
+        color: v-bind('styles.textColor');
       }
     }
   }
 
-  &-button-container button {
+  .button {
     outline: none;
     border: none;
     padding: 10px 15px;
     border-radius: 6px;
-    background-color: #673AB7;
+    background-color: v-bind('styles.color');
     color: white;
     border: 1px solid #333;
     font-weight: 400;
     font-size: 16px;
+
+    &--loading {
+      cursor: none;
+      opacity: .5;
+    }
   }
 }
 </style>

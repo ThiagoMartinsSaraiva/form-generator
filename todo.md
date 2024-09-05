@@ -1,4 +1,3 @@
-Simplificar o Respondi
 O formulário deve possuir 3 tipos de campos, mas pode ter inúmeras perguntas
 - Campo de texto simples
 - Campo de e-mail
@@ -14,13 +13,12 @@ Os dados do form vem da API:
  GET | https://65665153eb8bb4b70ef3297d.mockapi.io/api/forms
 
  Envio da Resposta
- O Respondi salva preenchimentos abandonados, por isso, 
+ Salva preenchimentos abandonados, por isso, 
  você deve enviar um POST com os dados da resposta a cada campo preenchido. 
  Você pode criar uma URL de testes no site https://webhook.site/ e enviar os dados pra lá.
 
 Requisitos
 - Vue2 ou Nuxt2
-- Criar um repositório público sem referências ao Respondi
 - Adicionar um ReadMe no projeto com instruções pra rodar pela primeira vez
 - Desenvolver parte visual do zero, sem libs de componententes prontas
 - Pode usar libs para outras funções que não sejam estilização
@@ -54,7 +52,6 @@ Diferenciais
 - Testes automatizados (nós usamos o Cypress)
 - Documentação
 - Deploy em uma infraestrutura de sua preferência (Heroku, Netlify, etc)
-
 
 Consumindo a API
 fields: tem os dados dos campos

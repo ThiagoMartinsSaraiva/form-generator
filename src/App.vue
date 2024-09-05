@@ -13,45 +13,35 @@ export default {
   components: {
     AppForm,
   },
-  data() {
-    return {
-      fields: [
-        {
-          description: [''],
-          items: [],
-          logic: {},
-          options: {},
-          position: 0,
-          slug: '',
-          type: '',
-          validation: { required: false },
-          value: '',
-        }
-      ],
-      head: {
-        title: '',
-        description: '',
-      },
-      style: {
-        background: [],
-        bgColor: '',
-        color: '',
-        questionColor: '',
-        textColor: ''
-      },
-      options: {}
-    }
-  },
-  mounted() {
-    const [data] = getFormDataService.run()
+  async mounted() {
+    const data = await getFormDataService.run()
     const { fields, head, style, options } = data
-    console.log(fields)
-    console.log(head)
-    console.log(style)
-    console.log(options)
-    this.fields = fields
+    const validFields = fields.filter(field => field.type !== 'thankyou')
+    this.$store.dispatch('FormStore/updateFields', validFields)
+    this.$store.dispatch('FormStore/updateHead', head)
+    this.$store.dispatch('FormStore/updateStyle', style)
+    this.$store.dispatch('FormStore/updateOptions', options)
     document.title = head.title
   },
+  computed: {
+    fields() {
+      return this.$store.getters["FormStore/getFields"]
+    },
+    isThankyou() {
+      return this.$store.getters["FormStore/isThankyou"]
+    },
+    thankyouResponse() {
+      const formData = this.$store.getters["FormStore/getFormData"]
+      const radio = this.fields.find(a => a.type === 'radio')
+
+      if (radio) {
+        const radioValue = formData[radio.slug]
+
+        return radio.logic.actions[radioValue].condition[0].data.exit
+      }
+      return ''
+    }
+  }
 };
 </script>
 

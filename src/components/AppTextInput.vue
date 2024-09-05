@@ -1,34 +1,70 @@
 <template>
-  <div>
-    <input type="text" placeholder="Sua resposta..." class="text-input">
+  <div class="wrapper">
+    <input type="text" :placeholder="placeholer" :class="['text-input', { 'text-input--hide-border': hideBorder } ]" v-model="data">
   </div>
 </template>
 <script>
 export default {
   name: "AppTextInput",
   data() {
-    return {};
+    return {
+      data: '',
+    };
   },
   props: {
-    field: { type: Object, default: () => ({}) }
+    field: { type: Object, default: () => ({}) },
+    placeholer: { type: String, default: 'Sua resposta...' },
+    hideBorder: { type: Boolean, default: false },
+    value: { type: String, default: '' }
   },
-  mounted() {
-    console.log("componente foi montado");
+  watch: {
+    value: {
+      handler(value) {
+        this.data = value
+      },
+      immediate: true,
+    },
+    data(data) {
+      this.$emit('input', data)
+    }
   },
+  computed: {
+    styles() {
+      const state = this.$store.getters['FormStore/getState']
+      return state.style
+    },
+    faded() {
+      return `${this.styles.color}88`
+    }
+  }
 };
 </script>
 <style scoped lang="scss">
+.wrapper {
+  flex: 1;
+}
 .text-input {
   border: none;
-  border-bottom: 1px solid #673AB7;
+  border-bottom: 1px solid v-bind('styles.questionColor');
   width: 100%;
-  padding: 10px;
   font-size: 22px;
-  color: #673AB7;
+  color: v-bind('styles.questionColor');
   font-weight: 400;
+  flex: 1;
+  background: transparent;
+
+  &--hide-border {
+    border-color: transparent;
+  }
+
+  &:focus {
+    border-color: v-bind('styles.questionColor');
+  }
 
   &::placeholder {
-    color: #673AB788;
+    color: v-bind(faded);
   }
+
+  
 }
 </style>

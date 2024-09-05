@@ -1,29 +1,15 @@
 # form-generator
 
-## Project setup
-```
-npm install
-```
+## para rodar o projeto você deve ter o node instalado, preferencialmente na versão 20.10
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## fazer o clone do projeto, 
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### git clone https://github.com/ThiagoMartinsSaraiva/form-generator
 
-### Run your end-to-end tests
-```
-npm run test:e2e
-```
+## após o clone, você deve instalar as dependências (preferencialmente com npm)
 
-### Lints and fixes files
-```
-npm run lint
-```
+### npm install
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## após isso é preciso inciar a aplicação
+
+#### npm run serve

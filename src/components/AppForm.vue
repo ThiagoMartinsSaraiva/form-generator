@@ -5,10 +5,6 @@
         <AppInput :formField="formField" v-if="index === currentField" />
       </div>
     </div>
-    <div class="form-container-button-container">
-      <button @click="previousQuestion"><i class="fa-solid fa-arrow-up"></i></button>
-      <button @click="nextQuestion"><i class="fa-solid fa-arrow-down"></i></button>
-    </div>
   </div>
 </template>
 <script>
@@ -25,21 +21,16 @@ export default {
   data() {
     return {};
   },
-  methods: {
-    async previousQuestion() {
-      await this.$store.dispatch('FormStore/previousQuestion')
-    },
-    async nextQuestion() {
-      await this.$store.dispatch('FormStore/nextQuestion')
-    }
-  },
-  mounted() {
-    console.log(this.$store.getters["FormStore/getCurrentField"])
-    console.log(this.$store.getters["FormStore/getFieldCount"])
-  },
   computed: {
     currentField() {
       return this.$store.getters["FormStore/getCurrentField"]
+    },
+    styles() {
+      const state = this.$store.getters['FormStore/getState']
+      return state.style
+    },
+    faded() {
+      return `${this.styles.color}33`
     }
   }
 };
@@ -69,8 +60,8 @@ export default {
       transition: color,background-color .2s linear;
 
       &:hover {
-        color: #673AB7;
-        background: #673AB733; 
+        color: v-bind('styles.color');
+        background: v-bind(faded); 
       }
 
       i {
