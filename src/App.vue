@@ -1,28 +1,70 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+     <AppForm :form-fields="fields" />
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import AppForm from "./components/AppForm.vue";
+import { getFormDataService } from './services/getFormDataService';
 
 export default {
   name: "App",
   components: {
-    HelloWorld,
+    AppForm,
+  },
+  data() {
+    return {
+      fields: [
+        {
+          description: [''],
+          items: [],
+          logic: {},
+          options: {},
+          position: 0,
+          slug: '',
+          type: '',
+          validation: { required: false },
+          value: '',
+        }
+      ],
+      head: {
+        title: '',
+        description: '',
+      },
+      style: {
+        background: [],
+        bgColor: '',
+        color: '',
+        questionColor: '',
+        textColor: ''
+      },
+      options: {}
+    }
+  },
+  mounted() {
+    const [data] = getFormDataService.run()
+    const { fields, head, style, options } = data
+    console.log(fields)
+    console.log(head)
+    console.log(style)
+    console.log(options)
+    this.fields = fields
+    document.title = head.title
   },
 };
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+* {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  font-family: 'Lato', 'Helvetica', sans-serif;
 }
+
+button {
+  cursor: pointer;
+}
+
 </style>
