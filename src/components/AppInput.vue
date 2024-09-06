@@ -6,7 +6,12 @@
           <label class="input-container-field-label-main">{{ formField.value }}</label>
           <label class="input-container-field-label-secondary" v-if="formField.description[0]">{{ formField.description[0] }}</label>
         </div>
-        <component :is="inputToRender" :field="formField" v-model="data" @keypress.native.enter="nextQuestion" />
+        <component :is="inputToRender" :field="formField" v-model="data" @keypress.native.enter="nextQuestion" :hasError="hasError && dirty" />
+        <span class="error" v-if="firstError && dirty">
+          <template>
+            {{ firstError.message }}
+          </template>
+        </span>
         <div class="button-container">
           <button :class="['button', { 'button--loading': isLoading }]" v-html="buttonText" @click="nextQuestion" :disabled="isLoading"></button>
         </div>
@@ -25,7 +30,7 @@ export default {
   components: {
   },
   props: {
-    formField: { type: Object, default: () => ({}) }
+    formField: { type: Object, default: () => ({}) },
   },
   data() {
     return {
@@ -35,6 +40,7 @@ export default {
         'radio': () => import ('./AppRadioInput.vue'),
       },
       data: '',
+      dirty: false,
     };
   },
   methods: {
@@ -42,9 +48,28 @@ export default {
       await this.$store.dispatch('FormStore/previousQuestion', { field: this.formField.slug, value: this.data })
     },
     async nextQuestion() {
+      this.dirty = true;
+      if (this.hasError) {
+        return
+      }
+
       if (this.formField.type == 'radio') {
-        const exit = !this.formField.logic.actions[this.data] ? 'x6x10krziri5' : this.formField.logic.actions[this.data].condition[0].data.exit
-        await this.$store.dispatch('FormStore/setSelectedThankyou', exit)        
+        const { actions } = this.formField.logic
+        const rules = actions.map(action => {
+          return { type: action.condition[0].type, enter: action.condition[0].data.enter, exit: action.condition[0].data.exit }
+        })
+
+        const foundRule = rules.find(rule => {
+          if (rule.type === 'contain') {
+            return this.data.toLowerCase().includes(rule.enter.toLowerCase())
+          }
+        })
+
+        if (!foundRule) {
+          return await this.$store.dispatch('FormStore/setSelectedThankyou', 'x6x10krziri5')
+        }
+
+        return await this.$store.dispatch('FormStore/setSelectedThankyou', foundRule.exit)
       }
       await this.$store.dispatch('FormStore/submitItem', { field: this.formField.slug, value: this.data })
     },
@@ -59,6 +84,29 @@ export default {
     }
   },
   computed: {
+    errors() {
+      const errors = {
+        required: {
+          condition: this.formField.options.required && (this.data === null || this.data === '' || this.data === undefined),
+          message: 'Essa resposta é obrigatória.',
+        },
+        email: {
+          condition: this.formField.type === 'email' && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(this.data),
+          message: 'Informe um E-mail válido.',
+        },
+      }
+
+      return errors
+    },
+    hasError() {
+      const errorKeys = Object.keys(this.errors)
+      return errorKeys.map(key => {
+        return (this.errors[key].condition)
+      }).some(error => error)
+    },
+    firstError() {
+      return Object.values(this.errors).find(error => error.condition === true);
+    },
     isLastInput() {
       return this.$store.getters['FormStore/isLastField']
     },
@@ -131,5 +179,16 @@ export default {
       opacity: .5;
     }
   }
+}
+
+.error {
+  background: #d23;
+  color: #fff;
+  width: fit-content;
+  padding: 3px 6px;
+  margin-top: -20px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  font-size: 12px;
 }
 </style>

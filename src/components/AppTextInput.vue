@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <input type="text" :placeholder="placeholer" :class="['text-input', { 'text-input--hide-border': hideBorder } ]" v-model="data">
+    <input type="text" :placeholder="placeholer" :class="['text-input', { 'text-input--hide-border': hideBorder, 'text-input--error-border': hasError } ]" v-model="data">
   </div>
 </template>
 <script>
@@ -15,6 +15,7 @@ export default {
     field: { type: Object, default: () => ({}) },
     placeholer: { type: String, default: 'Sua resposta...' },
     hideBorder: { type: Boolean, default: false },
+    hasError: { type: Boolean, default: false },
     value: { type: String, default: '' }
   },
   watch: {
@@ -39,7 +40,7 @@ export default {
   }
 };
 </script>
-<style scoped lang="scss">
+<style lang="scss">
 .wrapper {
   flex: 1;
 }
@@ -52,6 +53,10 @@ export default {
   font-weight: 400;
   flex: 1;
   background: transparent;
+
+  &--error-border {
+    border-color: #d23;
+  }
 
   &--hide-border {
     border-color: transparent;

@@ -1,10 +1,10 @@
 <template>
   <div class="radio-container">
-    <label v-for="(item, index) in field.items" :key="item.key" :class="['radio-container-input', {'radio-container-input--active': index === data}]">
-      <input type="radio" v-model="data" :value="index"> {{ item.label }}
+    <label v-for="(item) in field.items" :key="item.key" :class="['radio-container-input', {'radio-container-input--active': item.label === data}]">
+      <input type="radio" v-model="data" :value="item.label"> {{ item.label }}
     </label>
     <label class="radio-container-input radio-container-input--other">
-      <input type="radio" v-model="data" value="outro"> <AppTextInput placeholer="Outro..." hide-border @click.native="data = 'outro'" />
+      <input type="radio" v-model="otherData"> <AppTextInput placeholer="Outro..." hide-border v-model="otherData" />
     </label>
   </div>
 </template>
@@ -18,12 +18,13 @@ export default {
   },
   data() {
     return {
-      data: 0
+      data: '',
+      otherData: '',
     }
   },
   props: {
     field: { type: Object, default: () => ({}) },
-    value: { type: [Number, String], default: '' },
+    value: { type: String, default: '' },
   },
   watch: {
     value: {
@@ -34,12 +35,12 @@ export default {
     },
     data(data) {
       this.$emit('input', data)
-    }
+    },
+    otherData(value) {
+      this.data = value
+    },
   },
   computed: {
-    isOtherSelected() {
-      return this.data === 'outro'
-    },
     styles() {
       const state = this.$store.getters['FormStore/getState']
       return state.style
@@ -55,6 +56,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-bottom: 10px;
 
   &-input {
     border: solid 1px v-bind('styles.questionColor');

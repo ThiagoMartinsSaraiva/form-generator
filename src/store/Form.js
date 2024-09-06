@@ -9,13 +9,9 @@ export default {
     options: {},
     loading: false,
     formData: {},
-    thankyou: false,
     selectedThankyou: null,
   },
   getters: {
-    getFiedlCount(state) {
-      return state.fields.length
-    },
     getCurrentField(state) {
       return state.currentField
     },
@@ -38,9 +34,6 @@ export default {
     getFormData(state) {
       return state.formData
     },
-    isThankyou(state) {
-      return state.thankyou
-    },
     getSelectedThankyou(state) {
       return state.selectedThankyou
     },
@@ -58,19 +51,16 @@ export default {
       } 
       state.currentField++
     },
-    UPDATE_FIELDS(state, fields) {
+    SET_FIELDS(state, fields) {
       state.fields = fields
     },
-    UPDATE_THANKYOU_FIELDS(state, thankyouFields) {
-      state.thankyouFields = thankyouFields
-    },
-    UPDATE_HEAD(state, head) {
+    SET_HEAD(state, head) {
       state.head = head
     },
-    UPDATE_STYLE(state, style) {
+    SET_STYLE(state, style) {
       state.style = style
     },
-    UPDATE_OPTIONS(state, options) {
+    SET_OPTIONS(state, options) {
       state.options = options
     },
     SET_LOADING(state, loading) {
@@ -101,21 +91,20 @@ export default {
       commit('PREVIOUS_QUESTION')
       return true
     },
-    async updateFields({ commit }, fields) {
-      commit('UPDATE_FIELDS', fields)
+    async setFields({ commit }, fields) {
+      commit('SET_FIELDS', fields)
     },
-    async updateHead({ commit }, head) {
-      commit('UPDATE_HEAD', head)
+    async setHead({ commit }, head) {
+      commit('SET_HEAD', head)
     },
-    async updateStyle({ commit }, style) {
-      commit('UPDATE_STYLE', style)
+    async setStyle({ commit }, style) {
+      commit('SET_STYLE', style)
     },
-    async updateOptions({ commit }, options) {
-      commit('UPDATE_OPTIONS', options)
+    async setOptions({ commit }, options) {
+      commit('SET_OPTIONS', options)
     },
     async submitItem({ commit, dispatch }, { field, value }) {
       try {
-
         commit('SET_LOADING', true)
         commit('SET_FORM_DATA', { field, value })
         await fetch('https://webhook.site/855b44b1-6394-4e81-ac69-8421d969e838', {

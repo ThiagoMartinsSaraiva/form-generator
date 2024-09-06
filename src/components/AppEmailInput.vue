@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input type="email" placeholder="exemplo@exemplo.com" class="email-input" v-model="data">
+    <input type="email" placeholder="exemplo@exemplo.com" :class="['email-input', { 'email-input--error-border': hasError }]" v-model="data">
   </div>
 </template>
 <script>
@@ -14,6 +14,7 @@ export default {
   props: {
     field: { type: Object, default: () => ({}) },
     value: { type: String, default: '' },
+    hasError: { type: Boolean, default: false }
   },
   watch: {
     value: {
@@ -49,6 +50,10 @@ export default {
 
   &::placeholder {
     color: v-bind(faded);
+  }
+
+  &--error-border {
+    border-color: #d23;
   }
 }
 </style>
