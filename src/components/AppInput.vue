@@ -56,7 +56,8 @@ export default {
       if (this.formField.type == 'radio') {
         const { actions } = this.formField.logic
         const rules = actions.map(action => {
-          return { type: action.condition[0].type, enter: action.condition[0].data.enter, exit: action.condition[0].data.exit }
+          const { type, data } =action.condition[0]
+          return { type, enter: data.enter, exit: data.exit }
         })
 
         const foundRule = rules.find(rule => {
