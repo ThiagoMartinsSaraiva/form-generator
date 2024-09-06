@@ -1,18 +1,8 @@
 <template>
   <div class="form-container">
-    <div v-if="!selectedThankyou" class="form-container-input-container">
+    <div class="form-container-input-container">
       <div v-for="(formField, index) in formFields" :key="formField.slug">
         <AppInput :formField="formField" v-if="index === currentField" />
-      </div>
-    </div>
-    <div v-for="thankyouField in thankyouFields" :key="thankyouField.slug">
-      <div v-if="thankyouField.slug === selectedThankyou">
-        <div>
-          {{  thankyouField.value  }}
-        </div>
-        <div>
-          {{ thankyouField.description[0] }}
-        </div>
       </div>
     </div>
   </div>
@@ -35,14 +25,8 @@ export default {
     currentField() {
       return this.$store.getters["FormStore/getCurrentField"]
     },
-    thankyouFields() {
-      return this.$store.getters["FormStore/getThankyouFields"]
-    },
     defaultThankyouField() {
       return this.thankyouFields.find(tyF => tyF.slug === 'x6x10krziri5')
-    },
-    selectedThankyou() {
-      return this.$store.getters["FormStore/getSelectedThankyou"]
     },
     mappedThankyouFields() {
       return this.thankyouFields.map(t => {
@@ -99,6 +83,7 @@ export default {
     flex: 1;
     display: flex;
     flex-direction: column;
+    padding: 20px;
   }
 }
 </style>
