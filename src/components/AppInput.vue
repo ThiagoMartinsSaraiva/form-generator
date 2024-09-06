@@ -6,7 +6,7 @@
           <label class="input-container-field-label-main">{{ formField.value }}</label>
           <label class="input-container-field-label-secondary" v-if="formField.description[0]">{{ formField.description[0] }}</label>
         </div>
-        <component :is="inputToRender" :field="formField" v-model="data" />
+        <component :is="inputToRender" :field="formField" v-model="data" @keypress.native.enter="nextQuestion" />
         <div class="button-container">
           <button :class="['button', { 'button--loading': isLoading }]" v-html="buttonText" @click="nextQuestion" :disabled="isLoading"></button>
         </div>
@@ -66,6 +66,9 @@ export default {
       return this.mappedInput[this.formField.type]
     },
     buttonText() {
+      if (this.isLoading) {
+        return '<i class="fa-solid fa-spinner"></i>'
+      }
       return  this.isLastInput ? `<i class="fa-solid fa-check"></i>&nbsp; Enviar respostas` : 'Responder'
     },
     isLoading() {
@@ -93,7 +96,7 @@ export default {
   &-field {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 20px;
     max-width: 700px;
     width: 100%;
 
