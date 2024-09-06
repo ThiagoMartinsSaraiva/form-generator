@@ -26,6 +26,27 @@ export default {
     field: { type: Object, default: () => ({}) },
     value: { type: String, default: '' },
   },
+  methods: {
+    findRule() {
+      const { actions } = this.field.logic
+      const rules = actions.map(action => {
+        const { type, data } = action.condition[0]
+        return { type, enter: data.enter, exit: data.exit }
+      })
+
+      const foundRule = rules.find(rule => {
+        if (rule.type === 'contain') {
+          return this.data?.toLowerCase().includes(rule.enter.toLowerCase())
+        }
+      })
+
+      if (!foundRule) {
+        return 'x6x10krziri5'
+      }
+
+      return foundRule.exit
+    },
+  },
   watch: {
     value: {
       handler(value) {
@@ -35,6 +56,7 @@ export default {
     },
     data(data) {
       this.$emit('input', data)
+      this.$emit('foundRule', this.findRule())
     },
     otherData(value) {
       this.data = value

@@ -6,7 +6,7 @@
           <label class="input-container-field-label-main">{{ formField.value }}</label>
           <label class="input-container-field-label-secondary" v-if="formField.description[0]">{{ formField.description[0] }}</label>
         </div>
-        <component :is="inputToRender" :field="formField" v-model="data" @keypress.native.enter="nextQuestion" :hasError="hasError && dirty" />
+        <component :is="inputToRender" :field="formField" v-model="data" @keypress.native.enter="nextQuestion" :hasError="hasError && dirty" @foundRule="receiveRule" />
         <span class="error" v-if="firstError && dirty">
           <template>
             {{ firstError.message }}
@@ -41,9 +41,13 @@ export default {
       },
       data: '',
       dirty: false,
+      rule: null,
     };
   },
   methods: {
+    receiveRule(event){
+      this.rule = event
+    },
     async previousQuestion() {
       await this.$store.dispatch('FormStore/previousQuestion', { field: this.formField.slug, value: this.data })
     },
@@ -53,26 +57,8 @@ export default {
         return
       }
 
-      if (this.formField.type == 'radio') {
-        const { actions } = this.formField.logic
-        const rules = actions.map(action => {
-          const { type, data } =action.condition[0]
-          return { type, enter: data.enter, exit: data.exit }
-        })
-
-        const foundRule = rules.find(rule => {
-          if (rule.type === 'contain') {
-            return this.data.toLowerCase().includes(rule.enter.toLowerCase())
-          }
-        })
-
-        if (!foundRule) {
-          return await this.$store.dispatch('FormStore/setSelectedThankyou', 'x6x10krziri5')
-        }
-
-        return await this.$store.dispatch('FormStore/setSelectedThankyou', foundRule.exit)
-      }
       await this.$store.dispatch('FormStore/submitItem', { field: this.formField.slug, value: this.data })
+      await this.$store.dispatch('FormStore/setSelectedThankyou', this.rule)
     },
   },
   watch: {
