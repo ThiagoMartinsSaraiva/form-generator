@@ -17,7 +17,9 @@ export default {
     const data = await getFormDataService.run()
     const { fields, head, style, options } = data
     const validFields = fields.filter(field => field.type !== 'thankyou')
+    const thankyouFields = fields.filter(field => field.type === 'thankyou')
     this.$store.dispatch('FormStore/updateFields', validFields)
+    this.$store.dispatch('FormStore/setThankyouFields', thankyouFields)
     this.$store.dispatch('FormStore/updateHead', head)
     this.$store.dispatch('FormStore/updateStyle', style)
     this.$store.dispatch('FormStore/updateOptions', options)

@@ -42,6 +42,10 @@ export default {
       await this.$store.dispatch('FormStore/previousQuestion', { field: this.formField.slug, value: this.data })
     },
     async nextQuestion() {
+      if (this.formField.type == 'radio') {
+        const exit = !this.formField.logic.actions[this.data] ? 'x6x10krziri5' : this.formField.logic.actions[this.data].condition[0].data.exit
+        await this.$store.dispatch('FormStore/setSelectedThankyou', exit)        
+      }
       await this.$store.dispatch('FormStore/submitItem', { field: this.formField.slug, value: this.data })
     },
   },

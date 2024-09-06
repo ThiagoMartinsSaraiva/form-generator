@@ -10,6 +10,7 @@ export default {
     loading: false,
     formData: {},
     thankyou: false,
+    selectedThankyou: null,
   },
   getters: {
     getFiedlCount(state) {
@@ -39,6 +40,9 @@ export default {
     },
     isThankyou(state) {
       return state.thankyou
+    },
+    getSelectedThankyou(state) {
+      return state.selectedThankyou
     },
   },
   mutations: {
@@ -75,11 +79,20 @@ export default {
     SET_FORM_DATA(state, { field, value }) {
       state.formData[field] = value
     },
-    SET_THANKYOU(state, thankyou) {
-      state.thankyou = thankyou
+    SET_THANKYOU_FIELDS(state, thankyouFields) {
+      state.thankyouFields = thankyouFields
+    },
+    SET_SELECTED_THANKYOU(state, selectedThankyou) {
+      state.selectedThankyou = selectedThankyou
     }
   },
   actions: {
+    async setThankyouFields({ commit }, thankyouFields) {
+      commit('SET_THANKYOU_FIELDS', thankyouFields)
+    },
+    async setSelectedThankyou({ commit }, selectedThankyou) {
+      commit('SET_SELECTED_THANKYOU', selectedThankyou)
+    },
     async nextQuestion({ commit }) {
       commit('NEXT_QUESTION')
       return true
@@ -100,16 +113,11 @@ export default {
     async updateOptions({ commit }, options) {
       commit('UPDATE_OPTIONS', options)
     },
-    async submitItem({ commit, dispatch, getters }, { field, value }) {
+    async submitItem({ commit, dispatch }, { field, value }) {
       try {
-        commit('SET_THANKYOU', false)
 
         commit('SET_LOADING', true)
         commit('SET_FORM_DATA', { field, value })
-        if (getters.isLastField) {
-          commit('SET_THANKYOU', true)
-        }
-        
         await fetch('https://webhook.site/855b44b1-6394-4e81-ac69-8421d969e838', {
           method: 'POST',
           body: JSON.stringify({
