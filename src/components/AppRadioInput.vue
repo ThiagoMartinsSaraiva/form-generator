@@ -1,6 +1,6 @@
 <template>
   <div class="radio-container">
-    <label v-for="(item, index) in field.items" :key="item.key" class="radio-container-input">
+    <label v-for="(item, index) in field.items" :key="item.key" :class="['radio-container-input', {'radio-container-input--active': index === data}]">
       <input type="radio" v-model="data" :value="index"> {{ item.label }}
     </label>
     <label class="radio-container-input radio-container-input--other">
@@ -66,6 +66,11 @@ export default {
 
     &:hover {
       background-color: v-bind(faded);
+    }
+
+    &--active {
+      background-color: v-bind(faded);
+      font-weight: 700;
     }
 
     &--other {
