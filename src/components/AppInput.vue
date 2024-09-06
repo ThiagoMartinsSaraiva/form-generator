@@ -175,6 +175,10 @@ export default {
     font-weight: 400;
     font-size: 16px;
 
+    &:hover {
+      opacity: .9;
+    }
+
     &--loading {
       cursor: none;
       opacity: .5;

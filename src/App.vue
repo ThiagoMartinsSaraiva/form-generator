@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-      <AppForm :form-fields="fields" v-if="!selectedThankyou" />
-      <AppThankyouInput v-else />
+    <AppForm :form-fields="fields" v-if="!selectedThankyou" />
+    <AppThankyouInput v-else />
   </div>
 </template>
 

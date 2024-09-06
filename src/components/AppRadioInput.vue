@@ -4,7 +4,7 @@
       <input type="radio" v-model="data" :value="item.label"> {{ item.label }}
     </label>
     <label class="radio-container-input radio-container-input--other">
-      <input type="radio" v-model="otherData"> <AppTextInput placeholer="Outro..." hide-border v-model="otherData" />
+      <input type="radio" v-model="data" :value="otherData"> <AppTextInput placeholer="Outro..." hide-border v-model="otherData" />
     </label>
   </div>
 </template>
@@ -19,7 +19,7 @@ export default {
   data() {
     return {
       data: '',
-      otherData: '',
+      otherData: null,
     }
   },
   props: {
